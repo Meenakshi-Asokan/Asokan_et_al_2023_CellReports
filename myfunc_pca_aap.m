@@ -1,6 +1,7 @@
 function [Zproj,num_proj] = myfunc_pca_aap(data,var_exp)
 %INPUT - data - each row is a neuron and each column is the
 %spikecount/rate/response in a time bin
+%Output - projections in the transformed space
 [num_units, num_timepoints] = size(data);
 
 %mean z_fr for each units across all time points

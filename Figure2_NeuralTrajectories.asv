@@ -12,15 +12,12 @@ hab_units = data.pre_units_type;
 data_filename = fullfile(currentFolder,'/Data/Figure2/Recall_HOAC_BLA_units_RS.mat');
 data = load(data_filename);
 recall_units = data.post_units_type;
-%%
 mouse_numbers = [9,10,11,12,13,14,15,17];
-%Which sweep is which CS gets counterbalanced across mice
 cs_plus = [1,2,1,2,2,1,2,1];
 cs_minus = [2,1,2,1,1,2,1,2];
-regions = cell(1,2);
-regions{1} = 'HO-AC';
-regions{2} = 'BLA';
-region = 1;%Change region number to plot the neural trajectories for HO-AC and BLA separately
+%%
+%region 1 - HOAC (RS); region 2 - BLA (RS)
+region = 1;%Change region number
 Zproj = cell(2,2);%pre_post,2 sounds
 num_proj = [];
 var_exp = 0.8;
@@ -195,15 +192,46 @@ toc
 %%
 %Volin plots and stats
 data_filename = fullfile(currentFolder,'/Data/Figure2/stats_data_pca_traj_maingroup.mat');
-% data_filename =
-% fullfile(currentFolder,'/Data/Figure2/stats_data_pca_traj_pseudocond.mat');%Uncomment this and Comment
-% the line above to plot the viloin plots for pseudoconditioning data
-
 stats_data = load(data_filename);
 data = stats_data.stats_data;
 %Only 500 bootstraps taken for consistency with other analyses
-
+data = stats_data;
+mean1 = [];
+stderr1 = [];
+mean2 = [];
+stderr2 = [];
+mean_diff = [];
+stderr_diff = [];
+ltest = cell(1,length(data));
+ktest = cell(1,length(data));
+for r_num = 1:length(data)
+    values1 = data{r_num}(1,1:500);
+    values2 = data{r_num}(2,1:500);
+    diff = values2 - values1;
+    mean_diff  = [mean_diff mean(diff)];
+    stderr_diff = [stderr_diff std(diff)/sqrt(length(diff))];
+    mean1 =[mean1 mean(values1)];
+    stderr1 = [stderr1 std(values1)/sqrt(length(values1))];
+    mean2 = [mean2 mean(values2)];
+    stderr2 = [stderr2 std(values2)/sqrt(length(values2))];
+    ltest{r_num}(1) = lillietest(values1);
+    ltest{r_num}(2) = lillietest(values2);   
+    ktest{r_num}(1) = kstest((values1 - mean(values1))./std(values1));
+    ktest{r_num}(2) = kstest((values2 - mean(values2))./std(values2));
+end
+%ktest 0 => data are normal
 %normal as per ktest
+figure();
+for i = 1:length(data)
+subplot(1,length(data),i);
+bar([mean1(i) mean2(i)]);
+hold on
+errorbar(1:2,[mean1(i) mean2(i)],[stderr1(i) stderr2(i)],'.');
+hold on
+% ylim([-0.5 3.5]);
+% xlim([0 3]);
+box off
+end
 
 %2 sample/ unpaired t-test
 stats = cell(1,length(data));
@@ -222,21 +250,3 @@ h
 p
 d
 
-%%
-%violin plot
-figure();
-for r_num = 1:2
-    subplot(1,2,r_num);
-    data_mat = [];
-for pp = 1:2
-    data_mat(:,pp) = data{r_num}(pp,1:500);%500 bootstraps, not 1000 (to keep it consistent)
-end
-violinplot(data_mat,{'hab','recall'}, 'QuartileStyle','boxplot','HalfViolin','right',...
-    'ShowData',false);
-xlim([0.5 2.5]);
-box off
-ylabel('Eucledian distance between trajectories');
-title(regions{r_num});
-set(gca,'fontsize',12);
-
-end
