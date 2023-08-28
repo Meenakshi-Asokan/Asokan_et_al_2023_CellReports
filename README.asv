@@ -10,6 +10,5 @@ Original codes used for data analysis in the study by Asokan et al., "Potentiati
 ## Cell counting
 
 1) Use ImageJ to mark the cells, add to the ROI manager, and save the coordinates
-2) Mark the pial surface as a line and run the macro - Macro_DistanceToPialSurface.ijm (function written by Michael Cammer, Microscopy core NYU Langone Medical Center)
-to compute the distance of the cells from the pial surface
-3) Counting_Cells - reads in the spreadsheet with neuron counts and distance from pia, computes and plots cell counts and coordinates as rain cloud plots 
+2) Macro_DistanceToPialSurface.ijm - function written by Michael Cammer, Microscopy core NYU Langone Medical Center
+- A macro to compute the distance of the cells from the pial surface
