@@ -124,7 +124,8 @@ for meas = 1:2
         myfunc_boxplot_customized(bp_data,box_colors,box_width);%My function for a customized box plot (with mean display as well)
         hold on
         %Scatter plot on top
-        myfunc_scatterplot(bp_data);
+        scatter_width = 0.15;marker_size = 30;marker_color = [0.5 0.5 0.5];marker_alpha = 0.25;
+        myfunc_scatterplot(bp_data,scatter_width,marker_size,marker_color,marker_alpha);
         %Line plot on top
         for m = 1:length(bp_data{1})
             plot(1:2,[bp_data{1}(m),bp_data{2}(m)],'color',[0.5 0.5 0.5]);
@@ -172,7 +173,8 @@ for d = 1:2%1 - non-discriminatory; 2 - discriminatory changes
     myfunc_boxplot_customized(bp_data,box_colors,box_width);
     hold on
     %scatter plot on top
-    myfunc_scatterplot(bp_data);
+    scatter_width = 0.15;marker_size = 30;marker_color = [0.5 0.5 0.5];marker_alpha = 0.25;
+    myfunc_scatterplot(bp_data,scatter_width,marker_size,marker_color,marker_alpha);
     hline(0,'k--');
     xticklabels({'CS+','CS-'});
     if (meas ==1)

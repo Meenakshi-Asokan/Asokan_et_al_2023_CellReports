@@ -12,6 +12,8 @@ hab_units = data.pre_units_type;
 data_filename = fullfile(currentFolder,'/Data/Figure2/Recall_HOAC_BLA_units_RS.mat');
 data = load(data_filename);
 recall_units = data.post_units_type;
+%Add to path the folder Utils including all subfolders
+addpath(genpath(fullfile(currentFolder,'Utils')));
 %%
 mouse_numbers = [9,10,11,12,13,14,15,17];
 %Which sweep is which CS gets counterbalanced across mice
