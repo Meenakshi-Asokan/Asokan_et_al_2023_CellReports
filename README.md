@@ -5,7 +5,8 @@ Original codes used for data analysis in the study by Asokan et al., "Potentiati
 2) Figure2_Neurograms_fft
 3) Figure2_NeuralTrajectories
 4) Figure3_CAmy_CellCounting_Density
-5)  
+5) Figure3_Phototagging
+6) 
 
 ## Video_and_Pupil_analysis
 
