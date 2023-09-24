@@ -6,7 +6,9 @@ Original codes used for data analysis in the study by Asokan et al., "Potentiati
 3) Figure2_NeuralTrajectories
 4) Figure3_CAmy_CellCounting_Density
 5) Figure3_Phototagging
-6) 
+6) Figure3_CSResp_AssymetryIndices
+7) Figure4_LFP_LaserResp_GrowthSlope
+8)  
 
 ## Video_and_Pupil_analysis
 
