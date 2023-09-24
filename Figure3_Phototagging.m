@@ -7,21 +7,31 @@ clearvars
 %Download and save the 'Data' folder in the current working directory;
 %The 'Data' folder should have subfolders containing data corresponding to each Figure
 currentFolder = pwd;
-data_filename = fullfile(currentFolder,'/Data/Figure3/units_all_types_preandpost.mat');
-data = load(data_filename);
-units_type = data.units_type;
 data_filename = fullfile(currentFolder,'/Data/Figure3/cell_types_names.mat');
 data = load(data_filename);
 cell_types = data.cell_type;
+
+data_filename = fullfile(currentFolder,'/Data/Figure3/units_all_types_pre.mat');
+data = load(data_filename);
+units_pre = data.pre_units_type;
+data_filename = fullfile(currentFolder,'/Data/Figure3/units_all_types_post.mat');
+data = load(data_filename);
+units_post = data.post_units_type;
+
+units_all = cell(1,length(cell_types));
+for type = 1:length(cell_types)
+    units_all{type} = cat(2,units_pre{type},units_post{type});
+end
+
 %Add to path the folder Utils including all subfolders
 addpath(genpath(fullfile(currentFolder,'Utils')));
 %%
 %Plot the mean spike waveform shape of each unit within each cell type (CAmy, RS-HOAC, FS-HOAC,
 %RS-LA, FS-LA)
 
-wf = cell(1,length(units_type));
-for type = 1:length(units_type)
-    units = units_type{type};
+wf = cell(1,length(units_all));
+for type = 1:length(units_all)
+    units = units_all{type};
     for clu = 1:length(units)
         wf{type}(clu,:) = units(clu).wf_shape;
     end   
@@ -107,8 +117,8 @@ xlabel('Time wrt. AP trough (ms)');
 figure();
 CT0=cbrewer('qual', 'Set1', 5);
 CT = cat(1,flipud(CT0(1:3,:)),CT0(4:5,:));
-for type = 1:length(units_type)
-    units = units_type{type};
+for type = 1:length(units_all)
+    units = units_all{type};
     resp_clus = find([units.laser_resp] == 1);
 
 
@@ -133,7 +143,7 @@ raster = laser_resp_rasters(:,spont_win_micros+(1:resp_win_micros));
     end
     latency(i) = mean(fsl)/10;
     jitter(i) = std(fsl)/10;
-    units_type{type}(clu).laser_fsl_fsj = [latency(i) jitter(i)];
+    units_all{type}(clu).laser_fsl_fsj = [latency(i) jitter(i)];
 end
 scatter(jitter,latency,30,CT(type,:),'filled','MarkerEdgeColor',[0.5 0.5 0.5],'MarkerFaceAlpha',0.75,'MarkerEdgeAlpha',0);
 hold on
@@ -163,7 +173,7 @@ set(gca,'fontsize',12);
 %Plot laser response rasters in ms resolution 
 close all
 for type = 1%CAmy cells (change the type to plot the laser responses for other cell types)
-    units = units_type{type};
+    units = units_all{type};
     for clu = 1:length(units)
         raster = units(clu).laser_burstwise_rasters;
         raster_compress = zeros(size(raster,1),size(raster,2)/10);%saved in 0.1 ms resolution, therefore need to compress
